@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<!--
+<!DOCTYPE mapper  "/data/mgqg/mgqg_recommend_dubbo_scfs/mybatis/mapper/mybatis-3-mapper.dtd" >
+-->
+
+<mapper namespace="mapper.GeneralReportMapper">
+
+	<select id="queryUserByName" resultType="bean.generalReport.UserInfo">
+        select uid, username, password, mobile
+        from UserInfo
+        where username=#{username}
+    </select>
+    
+    <select id="getRegisterCounts" resultType="Integer" parameterType="bean.generalReport.GeneralReportRequestBean">
+        select count(rid) 
+        from registerFile r 
+        where r.registerDate=#{mDate} 
+	        and r.channelName=#{mChannelName} 
+	        and r.clientType in
+	        	<foreach item="mClientTypeList" collection="mClientTypeList" open="(" separator="," close=")">
+					#{mClientTypeList}
+				</foreach>
+    </select>
+    
+    <select id="getDayLogCounts" resultType="Integer" parameterType="bean.generalReport.GeneralReportRequestBean">
+    	select count(lid)
+    	from LogFile l
+    	where l.logDate=#{mDate} 
+	    	and l.channelName=#{mChannelName} 
+	    	and l.clientType in
+	        	<foreach item="mClientTypeList" collection="mClientTypeList" open="(" separator="," close=")">
+					#{mClientTypeList}
+				</foreach>
+    </select>
+    
+    <select id="getNewLogCounts" resultType="Integer" parameterType="bean.generalReport.GeneralReportRequestBean">
+    	select count(lid)
+    	from LogFile l, RegisterFile r
+    	where l.logDate=#{mDate} 
+	    	and r.registerDate=#{mDate} 
+	    	and l.mobile=r.mobile  
+	    	and l.channelName=#{mChannelName} 
+	    	and l.clientType in
+	        	<foreach item="mClientTypeList" collection="mClientTypeList" open="(" separator="," close=")">
+					#{mClientTypeList}
+				</foreach>
+    </select>
+    
+    <select id="getDayRecommendCounts" resultType="Integer" parameterType="bean.generalReport.GeneralReportRequestBean">
+    	select count(rid)
+    	from recommendFile r
+    	where r.recommendDate = #{mDate} 
+    		and r.channelName=#{mChannelName} 
+	    	and r.clientType in
+	        	<foreach item="mClientTypeList" collection="mClientTypeList" open="(" separator="," close=")">
+					#{mClientTypeList}
+				</foreach>
+    		
+    </select>
+    
+    <select id="getNewRecommendCounts" resultType="Integer" parameterType="bean.generalReport.GeneralReportRequestBean">
+    	select count(r1.rid)
+    	from recommendFile r1, registerFile r2
+    	where r1.recommendDate = #{mDate} 
+	    	and r2.registerDate=#{mDate} 
+	    	and r1.srcMobile = r2.mobile  
+	    	and r1.channelName=#{mChannelName} 
+	    	and r1.clientType in
+	        	<foreach item="mClientTypeList" collection="mClientTypeList" open="(" separator="," close=")">
+					#{mClientTypeList}
+				</foreach>
+    </select>
+    
+    <select id="getDayOrderCounts" resultType="Integer" parameterType="bean.generalReport.GeneralReportRequestBean">
+    	select count(oid)
+    	from orderFile o
+    	where o.orderDate=#{mDate}
+    		and o.channelName=#{mChannelName} 
+	    	and o.clientType in
+	        	<foreach item="mClientTypeList" collection="mClientTypeList" open="(" separator="," close=")">
+					#{mClientTypeList}
+				</foreach>
+    </select>
+    
+    <select id="getNewOrderCounts" resultType="Integer" parameterType="bean.generalReport.GeneralReportRequestBean">
+    	select count(oid)
+    	from orderFile o, registerFile r
+    	where o.orderDate=#{mDate} 
+	    	and r.registerDate=#{mDate} 
+	    	and o.orderMobile=r.mobile 
+	    	and o.channelName=#{mChannelName} 
+	    	and o.clientType in
+	        	<foreach item="mClientTypeList" collection="mClientTypeList" open="(" separator="," close=")">
+					#{mClientTypeList}
+				</foreach>
+    </select>
+    
+</mapper>

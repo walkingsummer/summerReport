@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<!--
+<!DOCTYPE mapper  "/data/mgqg/mgqg_recommend_dubbo_scfs/mybatis/mapper/mybatis-3-mapper.dtd" >
+-->
+
+<mapper namespace="mapper.ReportUserMapper">
+
+	<select id="getReportUser" resultType="bean.reportUser.ReportUser">
+		select rid as rid, name as name, password as password, privilege as privilege
+		from reportUser
+		where name=#{name} 
+	</select>
+	
+</mapper>

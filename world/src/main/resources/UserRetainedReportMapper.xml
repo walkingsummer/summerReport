@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+
+<mapper namespace="mapper.UserRetainedReportMapper">
+
+	<select id="getLogRetainedCounts" parameterType="bean.userRetainedReport.UserRetainedReportRequestBean" resultType="int">
+		select count(temp1.m1)
+		from (select DISTINCT mobile m1
+				from logFile l1
+				where #{mEndDate}>=l1.logDate 
+					and l1.logDate>=#{mMiddleDate} 
+					and l1.channelName=#{mChannelName}
+					and l1.clientType in
+					<foreach item="item" collection="mClientTypeList" open="(" separator="," close=")">
+						#{item}
+					</foreach>) temp1, 
+			(select DISTINCT mobile m2
+				from logFile l2
+				where #{mMiddleDate}>=l2.logDate 
+					and l2.logDate>=#{mStartDate} 
+					and l2.channelName=#{mChannelName}
+					and l2.clientType in
+					<foreach item="item" collection="mClientTypeList" open="(" separator="," close=")">
+						#{item}
+					</foreach>) temp2,
+			(select mobile m3 from userInfo u where u.province=#{mProvince}) temp3
+		where temp1.m1=temp2.m2 and temp1.m1=temp3.m3
+	</select>
+	
+	<select id="getRecommendRetainedCounts" parameterType="bean.userRetainedReport.UserRetainedReportRequestBean" resultType="int">
+		select count(temp1.m1)
+		from (select DISTINCT srcMobile m1
+				from recommendFile l1
+				where #{mEndDate}>=l1.recommendDate 
+					and l1.recommendDate>=#{mMiddleDate} 
+					and l1.channelName=#{mChannelName}
+					and l1.clientType in
+					<foreach item="item" collection="mClientTypeList" open="(" separator="," close=")">
+						#{item}
+					</foreach>) temp1, 
+			(select DISTINCT srcMobile m2
+				from recommendFile l2
+				where #{mMiddleDate}>=l2.recommendDate 
+					and l2.recommendDate>=#{mStartDate} 
+					and l2.channelName=#{mChannelName}
+					and l2.clientType in
+					<foreach item="item" collection="mClientTypeList" open="(" separator="," close=")">
+						#{item}
+					</foreach>) temp2,
+			(select mobile m3 from userInfo u where u.province=#{mProvince}) temp3
+		where temp1.m1=temp2.m2 and temp1.m1=temp3.m3
+	</select>
+	
+	
+	<select id="getOrderRetainedCounts" parameterType="bean.userRetainedReport.UserRetainedReportRequestBean" resultType="int">
+		select count(temp1.m1)
+		from (select DISTINCT orderMobile m1
+				from orderFile l1
+				where #{mEndDate}>=l1.orderDate 
+					and l1.orderDate>=#{mMiddleDate} 
+					and l1.channelName=#{mChannelName}
+					and l1.clientType in
+					<foreach item="item" collection="mClientTypeList" open="(" separator="," close=")">
+						#{item}
+					</foreach>) temp1, 
+			(select DISTINCT orderMobile m2
+				from orderFile l2
+				where #{mMiddleDate}>=l2.orderDate 
+					and l2.orderDate>=#{mStartDate} 
+					and l2.channelName=#{mChannelName}
+					and l2.clientType in
+					<foreach item="item" collection="mClientTypeList" open="(" separator="," close=")">
+						#{item}
+					</foreach>) temp2,
+			(select mobile m3 from userInfo u where u.province=#{mProvince}) temp3
+		where temp1.m1=temp2.m2 and temp1.m1=temp3.m3
+	</select>
+	 
+</mapper>
